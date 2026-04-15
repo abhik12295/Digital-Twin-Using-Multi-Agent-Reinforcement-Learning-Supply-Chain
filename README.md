@@ -13,7 +13,7 @@ Key Learning Indicators
 * Entropy: Gradual decrease → reduced randomness, improved policy confidence
 * Explained Variance: Increased → better value function estimation
 
-👉 Overall:
+Overall:
 
 The training process demonstrates stable convergence and effective policy learning.
 
@@ -43,7 +43,7 @@ The performance of three policies — Random, Heuristic, and PPO — is summariz
 
 ---
 
-## 🔍 Key Observations
+## Key Observations
 
 ### 1. Validated Environment Design
 
@@ -113,7 +113,7 @@ This modification is expected to:
 
 ---
 
-## 🏁 Conclusion
+## Conclusion
 
 This project demonstrates:
 
