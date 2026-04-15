@@ -4,6 +4,7 @@ import plotly.express as px
 import requests
 import streamlit as st
 
+
 BASE_DIR = Path(__file__).resolve().parents[1]
 FRED_PATH = BASE_DIR / "data" / "processed" / "fred_features.csv"
 WEATHER_PATH = BASE_DIR / "data" / "processed" / "weather_features.csv"
@@ -19,44 +20,7 @@ st.caption(
     "Live freight indicators, weather disruption signals, and reinforcement learning policy comparison"
 )
 
-# -------------------------------------------------------------------
-# Helper: fetch live weather from weather.gov using latitude/longitude
-# -------------------------------------------------------------------
-# def fetch_live_weather(latitude: float, longitude: float) -> dict:
-#     headers = {
-#         "User-Agent": "supply-chain-ai-dashboard/1.0 (research use)",
-#         "Accept": "application/geo+json",
-#     }
 
-#     point_url = f"https://api.weather.gov/points/{latitude},{longitude}"
-#     point_response = requests.get(point_url, headers=headers, timeout=30)
-#     point_response.raise_for_status()
-#     point_payload = point_response.json()
-
-#     forecast_url = point_payload["properties"]["forecast"]
-#     forecast_response = requests.get(forecast_url, headers=headers, timeout=30)
-#     forecast_response.raise_for_status()
-#     forecast_payload = forecast_response.json()
-
-#     periods = forecast_payload.get("properties", {}).get("periods", [])
-#     if not periods:
-#         raise ValueError("No forecast periods returned for the selected coordinates.")
-
-#     first = periods[0]
-
-#     return {
-#         "latitude": latitude,
-#         "longitude": longitude,
-#         "forecast_name": first.get("name"),
-#         "temperature": first.get("temperature"),
-#         "temperature_unit": first.get("temperatureUnit"),
-#         "wind_speed": first.get("windSpeed"),
-#         "wind_direction": first.get("windDirection"),
-#         "short_forecast": first.get("shortForecast"),
-#         "is_daytime": first.get("isDaytime"),
-#         "start_time": first.get("startTime"),
-#         "end_time": first.get("endTime"),
-#     }
 def fetch_live_weather(latitude: float, longitude: float) -> dict:
     headers = {
         "User-Agent": "supply-chain-ai-dashboard/1.0 (research use)",
@@ -102,9 +66,6 @@ def fetch_live_weather(latitude: float, longitude: float) -> dict:
     }
 
 
-# -------------------------------------------------------------------
-# Sidebar controls
-# -------------------------------------------------------------------
 st.sidebar.header("Live Weather Input")
 user_lat = st.sidebar.number_input(
     "Latitude",
@@ -125,9 +86,6 @@ user_lon = st.sidebar.number_input(
 
 fetch_weather_btn = st.sidebar.button("Fetch Live Weather")
 
-# -------------------------------------------------------------------
-# Data availability checks
-# -------------------------------------------------------------------
 missing_files = []
 if not FRED_PATH.exists():
     missing_files.append(str(FRED_PATH))
@@ -141,9 +99,6 @@ if missing_files:
             st.write(file)
     st.stop()
 
-# -------------------------------------------------------------------
-# Load local processed data
-# -------------------------------------------------------------------
 fred_df = pd.read_csv(FRED_PATH, parse_dates=["date"])
 weather_df = pd.read_csv(WEATHER_PATH)
 
@@ -151,9 +106,6 @@ results_df = None
 if RESULTS_PATH.exists():
     results_df = pd.read_csv(RESULTS_PATH)
 
-# -------------------------------------------------------------------
-# Header metrics
-# -------------------------------------------------------------------
 st.subheader("Live Economic and Weather Signals")
 
 latest_truck_ppi = fred_df["PCU484484"].dropna().iloc[-1] if "PCU484484" in fred_df.columns else None
@@ -183,31 +135,6 @@ col3.metric(
 )
 col4.metric("Stored Weather Locations", f"{len(weather_df)}")
 
-# -------------------------------------------------------------------
-# Live user-selected weather
-# -------------------------------------------------------------------
-# st.subheader("User-Selected Live Weather Forecast")
-
-# if fetch_weather_btn:
-#     try:
-#         live_weather = fetch_live_weather(user_lat, user_lon)
-#         live_weather_df = pd.DataFrame([live_weather])
-
-#         live_col1, live_col2, live_col3, live_col4 = st.columns(4)
-#         live_col1.metric("Forecast", str(live_weather.get("short_forecast", "N/A")))
-#         live_col2.metric(
-#             "Temperature",
-#             f"{live_weather.get('temperature', 'N/A')} {live_weather.get('temperature_unit', '')}",
-#         )
-#         live_col3.metric("Wind Speed", str(live_weather.get("wind_speed", "N/A")))
-#         live_col4.metric("Wind Direction", str(live_weather.get("wind_direction", "N/A")))
-
-#         st.dataframe(live_weather_df, width='stretch')
-
-#     except Exception as e:
-#         st.error(f"Could not fetch live weather for the selected coordinates: {e}")
-# else:
-#     st.info("Enter latitude and longitude in the sidebar and click 'Fetch Live Weather'.")
 st.subheader("User-Selected Live Weather Forecast")
 
 if fetch_weather_btn:
@@ -228,7 +155,10 @@ if fetch_weather_btn:
             f"{live_weather.get('temperature', 'N/A')} {live_weather.get('temperature_unit', '')}",
         )
         live_col3.metric("Forecast", str(live_weather.get("short_forecast", "N/A")))
-        live_col4.metric("Wind", f"{live_weather.get('wind_speed', 'N/A')} {live_weather.get('wind_direction', '')}")
+        live_col4.metric(
+            "Wind",
+            f"{live_weather.get('wind_speed', 'N/A')} {live_weather.get('wind_direction', '')}",
+        )
 
         st.dataframe(live_weather_df, width='stretch')
 
@@ -236,9 +166,7 @@ if fetch_weather_btn:
         st.error(f"Could not fetch live weather for the selected coordinates: {e}")
 else:
     st.info("Enter latitude and longitude in the sidebar and click 'Fetch Live Weather'.")
-# -------------------------------------------------------------------
-# Freight indicators chart
-# -------------------------------------------------------------------
+
 st.subheader("Freight and Trucking Economic Indicators")
 
 fred_plot_cols = [
@@ -271,15 +199,12 @@ if fred_plot_cols:
         xaxis_title="Date",
         yaxis_title="Index Value",
         legend_title="Indicator",
-        height=550,
+        height=600,
     )
     st.plotly_chart(fig1, width='stretch')
 else:
     st.info("No freight indicator columns available for plotting.")
 
-# -------------------------------------------------------------------
-# Weather snapshot from stored weather data
-# -------------------------------------------------------------------
 st.subheader("Stored Weather Risk Snapshot")
 
 display_weather_cols = [
@@ -326,9 +251,6 @@ fig2.update_layout(
 )
 st.plotly_chart(fig2, width='stretch')
 
-# -------------------------------------------------------------------
-# Model comparison section
-# -------------------------------------------------------------------
 st.subheader("Routing Policy Performance")
 
 if results_df is None:
@@ -445,9 +367,6 @@ else:
         "routing choices to optimize broader reward trade-offs and manage disruption exposure."
     )
 
-# -------------------------------------------------------------------
-# Research summary
-# -------------------------------------------------------------------
 st.subheader("Research Summary")
 st.markdown(
     """
