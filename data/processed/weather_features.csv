@@ -1,5 +1,5 @@
 latitude,longitude,forecast_name,temperature,temperature_unit,wind_speed,wind_direction,short_forecast,is_daytime,start_time,end_time
-41.8781,-87.6298,Today,73,F,15 mph,SSW,Showers And Thunderstorms Likely,True,2026-04-15T10:00:00-05:00,2026-04-15T18:00:00-05:00
+41.8781,-87.6298,This Afternoon,73,F,15 mph,SSW,Showers And Thunderstorms Likely,True,2026-04-15T12:00:00-05:00,2026-04-15T18:00:00-05:00
 32.7767,-96.797,Today,81,F,10 to 15 mph,S,Chance Showers And Thunderstorms,True,2026-04-15T08:00:00-05:00,2026-04-15T18:00:00-05:00
 33.4484,-112.074,Today,86,F,0 to 5 mph,SSE,Sunny,True,2026-04-15T06:00:00-07:00,2026-04-15T18:00:00-07:00
 33.749,-84.388,Today,87,F,5 to 10 mph,W,Sunny,True,2026-04-15T06:00:00-04:00,2026-04-15T18:00:00-04:00

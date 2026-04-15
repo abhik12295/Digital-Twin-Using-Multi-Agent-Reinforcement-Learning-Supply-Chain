@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Dict
 
 import gymnasium as gym
@@ -106,17 +105,38 @@ class SupplyChainRoutingEnv(gym.Env):
 
         truck_cost, truckload, local_freight, disruption = self.state
 
-        route_efficiency = [1.00, 0.93, 0.88][action]
+        #route_efficiency = [1.00, 0.93, 0.88][action]
+        if action == 0:  # cheapest
+            route_efficiency = 1.05
+            disruption_penalty = 1.2
+
+        elif action == 1:  # balanced
+            route_efficiency = 0.95
+            disruption_penalty = 1.0
+
+        else:  # safest
+            route_efficiency = 0.85
+            disruption_penalty = 0.7
+        effective_disruption = disruption * disruption_penalty
+
         cost = ((0.5 * truck_cost) + (0.3 * truckload) + (0.2 * local_freight)) / route_efficiency
-        service_risk = 0.65 * disruption + 0.20 * truckload + 0.15 * truck_cost - (0.07 * action)
+        cost += float(self.rng.normal(0, 0.05))
+        cost = max(cost, 0.0)
+
+        service_risk = (
+            (0.65 * disruption * disruption_penalty)
+            + (0.20 * truckload)
+            + (0.15 * truck_cost)
+        )
+        # service_risk = 0.65 * disruption + 0.20 * truckload + 0.15 * truck_cost - (0.07 * action)
         on_time = int(service_risk < 0.62)
 
-        reward = (1.7 * on_time) - (1.3 * cost) - (1.1 * disruption)
+        reward = (1.7 * on_time) - (1.3 * cost) - (1.1 * effective_disruption)
         result = StepResult(
             reward=float(reward),
             cost=float(cost),
             on_time=on_time,
-            disruption_score=float(disruption),
+            disruption_score=float(effective_disruption),
         )
 
         self.current_step += 1

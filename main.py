@@ -1,10 +1,12 @@
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
+import pandas as pd
+from pathlib import Path
 from src.data.live_data import LiveSupplyChainDataPipeline
 from src.models.training import evaluate_random_policy, evaluate_heuristic_policy
+from src.models.ppo_training import train_ppo_model, evaluate_ppo_model
+from src.utils.plot_results import plot_results
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def main() -> None:
@@ -20,7 +22,14 @@ def main() -> None:
     heuristic_metrics = evaluate_heuristic_policy(episodes=10, seed=42)
 
     print("=" * 72)
-    print("SPRINT 2A - BASELINE COMPARISON")
+    print("TRAINING PPO AGENT")
+    print("=" * 72)
+    model = train_ppo_model(total_timesteps=10000, seed=42)
+
+    ppo_metrics = evaluate_ppo_model(model=model, episodes=10, seed=42)
+
+    print("\n" + "=" * 72)
+    print("SPRINT 2B - POLICY COMPARISON")
     print("=" * 72)
 
     print("\nRandom Policy")
@@ -34,23 +43,22 @@ def main() -> None:
     print(f"Average normalized cost : {heuristic_metrics['avg_cost']:.4f}")
     print(f"Average on-time rate    : {heuristic_metrics['avg_on_time_rate'] * 100:.2f}%")
     print(f"Average disruption score: {heuristic_metrics['avg_disruption_score']:.4f}")
-    '''
-    ========================================================================
-    SPRINT 2A - BASELINE COMPARISON
-    ========================================================================
 
-    Random Policy
-    Average reward          : -16.7786
-    Average normalized cost : 0.6139
-    Average on-time rate    : 61.80%
-    Average disruption score: 0.5346
+    print("\nPPO Policy")
+    print(f"Average reward          : {ppo_metrics['avg_reward']:.4f}")
+    print(f"Average normalized cost : {ppo_metrics['avg_cost']:.4f}")
+    print(f"Average on-time rate    : {ppo_metrics['avg_on_time_rate'] * 100:.2f}%")
+    print(f"Average disruption score: {ppo_metrics['avg_disruption_score']:.4f}")
 
-    Heuristic Policy
-    Average reward          : -14.3862
-    Average normalized cost : 0.6320
-    Average on-time rate    : 66.00%
-    Average disruption score: 0.5346
-    '''
+    results_df = pd.DataFrame([
+        {"model": "Random", **random_metrics},
+        {"model": "Heuristic", **heuristic_metrics},
+        {"model": "PPO", **ppo_metrics},
+    ])
+    results_dir = Path("results")
+    results_dir.mkdir(exist_ok=True)
+    results_df.to_csv(results_dir / "comparison.csv", index=False)
+    plot_results()
 
 
 if __name__ == "__main__":
