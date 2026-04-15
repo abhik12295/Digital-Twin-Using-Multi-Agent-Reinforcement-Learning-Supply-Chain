@@ -16,9 +16,8 @@ class LiveDataConfig:
         "PCU484110484110P",   # General Freight Trucking, Local: Primary Services
     )
     fred_start_date: str = "2020-01-01"
-    fred_end_date: str = "9999-12-31"
+    fred_end_date: str | None = None
 
-    # Example NWS points; later you can make these dynamic by route/state
     nws_points: tuple[tuple[float, float], ...] = (
         (41.8781, -87.6298),   # Chicago
         (32.7767, -96.7970),   # Dallas

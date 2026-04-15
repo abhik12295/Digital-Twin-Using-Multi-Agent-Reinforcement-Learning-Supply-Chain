@@ -23,15 +23,17 @@ class FREDClient:
         self,
         series_id: str,
         observation_start: str = "2020-01-01",
-        observation_end: str = "9999-12-31",
+        observation_end: str | None = None,
     ) -> pd.DataFrame:
         params = {
             "series_id": series_id,
             "api_key": self.api_key,
             "file_type": "json",
             "observation_start": observation_start,
-            "observation_end": observation_end,
         }
+
+        if observation_end:
+            params["observation_end"] = observation_end
 
         response = requests.get(self.base_url, params=params, timeout=30)
         response.raise_for_status()
@@ -97,6 +99,25 @@ class LiveSupplyChainDataPipeline:
         self.nws = NWSClient()
 
     def fetch_fred_data(self) -> pd.DataFrame:
+        frames: list[pd.DataFrame] = []
+        for series_id in self.config.fred_series:
+            df = self.fred.fetch_series(
+                series_id=series_id,
+                observation_start=self.config.fred_start_date,
+                observation_end=self.config.fred_end_date,
+            )
+            frames.append(df)
+
+        long_df = pd.concat(frames, ignore_index=True)
+        pivot_df = (
+            long_df.pivot(index="date", columns="series_id", values="value")
+            .sort_index()
+            .reset_index()
+        )
+        pivot_df.columns.name = None
+        return pivot_df
+
+    #def fetch_fred_data(self) -> pd.DataFrame:
         frames: list[pd.DataFrame] = []
         for series_id in self.config.fred_series:
             df = self.fred.fetch_series(
