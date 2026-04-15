@@ -121,6 +121,7 @@ This project demonstrates:
 * Successful application of reinforcement learning (PPO)
 * Clear differentiation between policy behaviors
 * Emergence of real-world trade-offs between cost and robustness
+* Dashboard Access- streamlit run app/dashboard.py
 
 Overall, the results validate the effectiveness of **multi-agent reinforcement learning for resilient supply chain optimization under uncertainty**.
 
