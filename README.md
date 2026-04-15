@@ -125,8 +125,8 @@ This project demonstrates:
 
 ## Project Report / PDF View
 
-[Open the PDF report](./results/models/dashboard.pdf) for a comprehensive analysis of the project, including detailed results, visualizations, and insights.
-[![PDF Preview](./results/models/Figure_1.png)](./results/models/dashboard.pdf)
+[Open the PDF report](./results/dashboard.pdf) for a comprehensive analysis of the project, including detailed results, visualizations, and insights.
+[![PDF Preview](./results/Figure_1.png)](./results/dashboard.pdf)
 
 Overall, the results validate the effectiveness of **multi-agent reinforcement learning for resilient supply chain optimization under uncertainty**.
 
