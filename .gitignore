@@ -1,3 +1,28 @@
-./vieom
-./data
+# Python virtual environment
+vieom/
+
+# Data files (ignore raw/processed datasets)
+data/
+
+# Byte-compiled / cache
+__pycache__/
+*.pyc
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Streamlit cache
+.streamlit/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Results (optional: ignore if you regenerate)
+results/
+
+# Environment variables
 .env
