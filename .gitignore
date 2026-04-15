@@ -22,7 +22,6 @@ Thumbs.db
 *.log
 
 # Results (optional: ignore if you regenerate)
-results/
 
 # Environment variables
 .env
