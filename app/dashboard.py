@@ -230,7 +230,7 @@ if fetch_weather_btn:
         live_col3.metric("Forecast", str(live_weather.get("short_forecast", "N/A")))
         live_col4.metric("Wind", f"{live_weather.get('wind_speed', 'N/A')} {live_weather.get('wind_direction', '')}")
 
-        st.dataframe(live_weather_df, use_container_width=True)
+        st.dataframe(live_weather_df, width='stretch')
 
     except Exception as e:
         st.error(f"Could not fetch live weather for the selected coordinates: {e}")

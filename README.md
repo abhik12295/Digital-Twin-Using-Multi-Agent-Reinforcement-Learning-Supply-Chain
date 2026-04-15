@@ -123,5 +123,10 @@ This project demonstrates:
 * Emergence of real-world trade-offs between cost and robustness
 * Dashboard Access- streamlit run app/dashboard.py
 
+## Project Report / PDF View
+
+[Open the PDF report](./results/models/Supply Chain AI Dashboard.pdf) for a comprehensive analysis of the project, including detailed results, visualizations, and insights.
+[![PDF Preview](./results/models/Figure_1.png)](./results/models/Supply Chain AI Dashboard.pdf)
+
 Overall, the results validate the effectiveness of **multi-agent reinforcement learning for resilient supply chain optimization under uncertainty**.
 
