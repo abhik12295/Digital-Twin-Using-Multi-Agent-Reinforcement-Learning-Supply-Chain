@@ -31,6 +31,20 @@ def main() -> None:
     print(f"Average on-time rate    : {metrics['avg_on_time_rate'] * 100:.2f}%")
     print(f"Average disruption score: {metrics['avg_disruption_score']:.4f}")
 
+    '''
+    ========================================================================
+    SPRINT 1 COMPLETE - LIVE PUBLIC DATA INGESTION + RL ENVIRONMENT
+    ========================================================================
+    Saved:
+    - data/processed/fred_features.csv
+    - data/processed/weather_features.csv
+
+    Baseline random policy metrics
+    Average reward          : -16.7786
+    Average normalized cost : 0.6139
+    Average on-time rate    : 61.80%
+    Average disruption score: 0.5346
+    '''
 
 if __name__ == "__main__":
     main()
